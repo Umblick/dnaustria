@@ -28,7 +28,16 @@ out = { 'events' => [] }
 csv.each do |row|
   tmp = {}
   headers.each do |header|
-    tmp[header] = row[header] unless row[header].nil?
+    case header
+    when "event_target_audience", "event_topics"
+      tmp[header] = row[header].split(/, /).map {|num| num.to_i } unless row[header].nil?
+    when "location"
+      tmp[header] = row[header].split(/, /).map {|num| num.gsub(/,/, ".").to_f } unless row[header].nil?
+    when "event_has_fees", "event_is_online", "event_school_bookable"
+      tmp[header] = (row[header].downcase == "true" ? true : false) unless row[header].nil?
+    else
+      tmp[header] = row[header] unless row[header].nil?
+    end
   end
   out['events'] << tmp
 end
