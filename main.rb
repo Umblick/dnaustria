@@ -31,6 +31,8 @@ csv.each do |row|
     case header
     when "event_target_audience", "event_topics"
       tmp[header] = row[header].split(/, /).map {|num| num.to_i } unless row[header].nil?
+    when "event_age_minimum", "event_age_maximum"
+      tmp[header] = row[header].to_i unless row[header].nil?
     when "location"
       tmp[header] = row[header].split(/, /).map {|num| num.gsub(/,/, ".").to_f } unless row[header].nil?
     when "event_has_fees", "event_is_online", "event_school_bookable"
